@@ -48,7 +48,7 @@ async function makeEvent(
                 ['t', 'internal-transaction-start'],
             ],
             content: JSON.stringify(content),
-            created_at: Math.round(Date.now() / 1000),
+            created_at: Math.round(Date.now() / 1000) + 1,
             pubkey: modulePubkey,
         };
 
