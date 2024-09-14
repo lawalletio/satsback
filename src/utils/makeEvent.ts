@@ -1,5 +1,4 @@
-import NDK, { NDKEvent } from '@nostr-dev-kit/ndk';
-import { UnsignedEvent } from 'nostr-tools';
+import { EventTemplate, finalizeEvent, NostrEvent } from 'nostr-tools';
 
 const whitelistPublicKeys = {
     pulpo: '9c38f29d508ffdcbe6571a7cf56c963a5805b5d5f41180b19273f840281b3d45',
@@ -12,27 +11,25 @@ const whitelistPublicKeys = {
 const whitelistVolunteers = {};
 
 async function makeEvent(
-    userPubkey: string,
     amount: number,
+    userPubkey: string,
     ledgerPubkey: string,
-    ndk: NDK
-): Promise<NDKEvent> {
+    privateKey: Uint8Array
+): Promise<NostrEvent> {
     try {
-        // Check if user is allowed to make cash back
+        // Check if user is allowed to make cash back // debug
         if (!Object.values(whitelistPublicKeys).includes(userPubkey)) {
             throw new Error('User not allowed to make cash back');
         }
 
         // Cash back rate
-        let cashBackRate = 0.5; // Default cash back rate
+        let cashBackRate = 0.1; // Default cash back rate
 
         if (Object.values(whitelistVolunteers).includes(userPubkey)) {
-            cashBackRate = 0.8; // Volunteer cash back rate
+            cashBackRate = 0.8; // Volunteers cash back rate
         }
 
         // Make event
-        const modulePubkey = (await ndk.signer!.user()).pubkey;
-
         const content = {
             tokens: {
                 BTC: amount * cashBackRate,
@@ -40,7 +37,7 @@ async function makeEvent(
             memo: 'cash back test',
         };
 
-        const unsignedEvent: UnsignedEvent = {
+        const unsignedEvent: EventTemplate = {
             kind: 1112,
             tags: [
                 ['p', ledgerPubkey],
@@ -49,14 +46,14 @@ async function makeEvent(
             ],
             content: JSON.stringify(content),
             created_at: Math.round(Date.now() / 1000) + 1,
-            pubkey: modulePubkey,
         };
 
-        const ndkEvent: NDKEvent = new NDKEvent(ndk, unsignedEvent);
+        const signedEvent: NostrEvent = finalizeEvent(
+            unsignedEvent,
+            privateKey
+        );
 
-        await ndkEvent.sign();
-
-        return ndkEvent;
+        return signedEvent;
 
         // eslint-disable-next-line
     } catch (error: any) {
