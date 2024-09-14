@@ -15,12 +15,13 @@ async function generateRelay(
                 console.log('Event recived:', event);
                 subscriptionCondition.callback(event);
             },
-            async onclose() {
-                console.log('Relay closed');
-                return await generateRelay(relayUrl, subscriptionCondition);
-            },
         });
     }
+
+    relay.onclose = async () => {
+        console.log('Relay closed');
+        return await generateRelay(relayUrl, subscriptionCondition);
+    };
 
     return relay;
 }
