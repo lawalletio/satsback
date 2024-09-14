@@ -1,13 +1,13 @@
 {
-    "name": "getting-started-node-typescript",
+    "name": "cash-back-lawallet",
     "repository": {
         "type": "git",
-        "url": "https://github.com/rapax00/getting-started-node-typescript"
+        "url": "https://github.com/lawalletio/cash-back"
     },
     "keywords": [],
     "author": "Rapax",
     "license": "MIT",
-    "homepage": "https://github.com/rapax00/getting-started-node-typescript#readme",
+    "homepage": "https://github.com/lawalletio/cash-back#readme",
     "version": "1.0.0",
     "description": "",
     "main": "index.js",
@@ -33,7 +33,7 @@
     "dependencies": {
         "@nostr-dev-kit/ndk": "^2.10.0",
         "dotenv": "^16.4.5",
-        "nostr-tools": "^2.7.2",
+        "nostr-tools": "2.7.2",
         "ws": "^8.18.0"
     }
 }
