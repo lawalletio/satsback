@@ -8,7 +8,7 @@
     "author": "Rapax",
     "license": "MIT",
     "homepage": "https://github.com/lawalletio/cash-back#readme",
-    "version": "1.0.0",
+    "version": "v0.1.0-alpha",
     "description": "",
     "main": "index.js",
     "scripts": {
