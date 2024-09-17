@@ -1,10 +1,10 @@
 # Cash Back Module for LaWallet
 
-<!-- ![Latest Release](https://badgen.net/github/release/lawalletio/cash-back/stable/?color=blue&icon=bitcoin-lightning) -->
+<!-- ![Latest Release](https://badgen.net/github/release/lawalletio/sats-back/stable/?color=blue&icon=bitcoin-lightning) -->
 
-![License](https://badgen.net/github/license/lawalletio/cash-back/?color=cyan)
-![Stars](https://badgen.net/github/stars/lawalletio/cash-back/?color=yellow)
-![Forks](https://badgen.net/github/forks/lawalletio/cash-back/?color=grey)
+![License](https://badgen.net/github/license/lawalletio/sats-back/?color=cyan)
+![Stars](https://badgen.net/github/stars/lawalletio/sats-back/?color=yellow)
+![Forks](https://badgen.net/github/forks/lawalletio/sats-back/?color=grey)
 
 This module is used to send cashback to users who purchase with LaWallet through LaPOS using LaCard.
 
