@@ -65,7 +65,7 @@ pnpm dev
 
 ## To Do
 
--   [ ] Check minimum amount of cash-back
+-   [x] Fix minimum amount of satsback
 -   [ ] Add database
 -   [ ] Environment variables
     -   [ ] Add list of volunteers walias
