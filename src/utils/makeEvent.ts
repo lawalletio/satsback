@@ -1,4 +1,7 @@
 import { EventTemplate, finalizeEvent, NostrEvent } from 'nostr-tools';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 const whitelistPublicKeys = {
     pulpo: '9c38f29d508ffdcbe6571a7cf56c963a5805b5d5f41180b19273f840281b3d45',
@@ -25,15 +28,17 @@ async function makeEvent(
         }
 
         // Satsback rate
-        let satsbackRate = 0.1; // Default satsback rate
+        let satsbackRate: string = process.env.SATSBACK_DEFAULT!; // Default satsback rate
 
         if (Object.values(whitelistVolunteers).includes(userPubkey)) {
-            satsbackRate = 0.8; // Volunteers satsback rate
+            satsbackRate = process.env.SATSBACK_VOLUNTEERS!; // Volunteers satsback rate
         }
 
         // Satsback amount in mSats
         const satsbackAmount: number =
-            Math.floor(Math.max(1000, amount * satsbackRate) / 1000) * 1000;
+            Math.floor(
+                Math.max(1000, amount * parseFloat(satsbackRate)) / 1000
+            ) * 1000;
 
         // Make event
         const content = {

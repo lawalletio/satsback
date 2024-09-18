@@ -67,9 +67,8 @@ pnpm dev
 
 -   [x] Fix minimum amount of satsback
 -   [ ] Add database
--   [ ] Environment variables
     -   [ ] Add list of volunteers walias
-    -   [ ] Add cash-back percentages (normal and volunteers)
+-   [x] Add satsback percentages (normal and volunteers) to environment variables
 -   [ ] Setup volunteers in db (pubkey and sats of voucher)
 -   [ ] makeEvent
     -   [ ] Volunteers handle
