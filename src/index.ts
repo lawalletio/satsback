@@ -1,7 +1,7 @@
 import 'websocket-polyfill';
 import * as dotenv from 'dotenv';
 import { Filter } from 'nostr-tools';
-import { sendSatsback } from './utils/sendSatsback';
+import { sendSatsback } from './services/sendSatsback';
 import { generateRelay } from './services/relay';
 import { SubscriptionParams } from './types/relay';
 
