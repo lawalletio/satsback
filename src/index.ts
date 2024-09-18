@@ -1,7 +1,7 @@
 import 'websocket-polyfill';
 import * as dotenv from 'dotenv';
 import { Filter } from 'nostr-tools';
-import { sendCashBack } from './utils/sendCashBack';
+import { sendSatsback } from './utils/sendSatsback';
 import { generateRelay } from './services/relay';
 import { SubscriptionParams } from './types/relay';
 
@@ -35,15 +35,13 @@ const start = async () => {
             filters,
             callback: async (event) => {
                 try {
-                    await sendCashBack(event, ledgerPublicKey, privateKey);
+                    await sendSatsback(event, ledgerPublicKey, privateKey);
 
                     // eslint-disable-next-line
                 } catch (error: any) {
-                    if (
-                        error.message === 'User not allowed to make cash back'
-                    ) {
+                    if (error.message === 'User not allowed to make satsback') {
                         console.warn(
-                            'Unauthorized user tried to make cash back'
+                            'Unauthorized user tried to make satsback'
                         );
                     } else {
                         console.error('Error in relay callback:', error);

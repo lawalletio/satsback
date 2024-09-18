@@ -8,7 +8,9 @@ const whitelistPublicKeys = {
     dios: 'cee287bb0990a8ecbd1dee7ee7f938200908a5c8aa804b3bdeaed88effb55547',
 };
 
-const whitelistVolunteers = {};
+const whitelistVolunteers = {
+    pulpo: '9c38f29d508ffdcbe6571a7cf56c963a5805b5d5f41180b19273f840281b3d45',
+};
 
 async function makeEvent(
     amount: number,
@@ -17,24 +19,28 @@ async function makeEvent(
     privateKey: Uint8Array
 ): Promise<NostrEvent> {
     try {
-        // Check if user is allowed to make cash back // debug
+        // Check if user is allowed to make satsback // debug
         if (!Object.values(whitelistPublicKeys).includes(userPubkey)) {
-            throw new Error('User not allowed to make cash back');
+            throw new Error('User not allowed to make satsback');
         }
 
-        // Cash back rate
-        let cashBackRate = 0.1; // Default cash back rate
+        // Satsback rate
+        let satsbackRate = 0.1; // Default satsback rate
 
         if (Object.values(whitelistVolunteers).includes(userPubkey)) {
-            cashBackRate = 0.8; // Volunteers cash back rate
+            satsbackRate = 0.8; // Volunteers satsback rate
         }
+
+        // Satsback amount in mSats
+        const satsbackAmount: number =
+            Math.floor(Math.max(1000, amount * satsbackRate) / 1000) * 1000;
 
         // Make event
         const content = {
             tokens: {
-                BTC: amount * cashBackRate,
+                BTC: satsbackAmount,
             },
-            memo: 'cash back test',
+            memo: 'satsback test',
         };
 
         const unsignedEvent: EventTemplate = {

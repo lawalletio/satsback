@@ -1,13 +1,13 @@
 {
-    "name": "cash-back-lawallet",
+    "name": "satsback-lawallet",
     "repository": {
         "type": "git",
-        "url": "https://github.com/lawalletio/cash-back"
+        "url": "https://github.com/lawalletio/satsback"
     },
     "keywords": [],
     "author": "Rapax",
     "license": "MIT",
-    "homepage": "https://github.com/lawalletio/cash-back#readme",
+    "homepage": "https://github.com/lawalletio/satsback#readme",
     "version": "v0.1.0-alpha",
     "description": "",
     "main": "index.js",

@@ -1,7 +1,7 @@
 import { NostrEvent } from 'nostr-tools';
 import { makeEvent } from './makeEvent';
 
-async function sendCashBack(
+async function sendSatsback(
     event: NostrEvent,
     ledgerPublicKey: string,
     privateKey: Uint8Array
@@ -41,16 +41,16 @@ async function sendCashBack(
 
         // Error
         if (!response.ok) {
-            throw new Error(`Failed to send cash back: ${response.statusText}`);
+            throw new Error(`Failed to send satsback: ${response.statusText}`);
         }
 
-        console.log('Cash back sent');
+        console.log('Satsback sent');
 
         // eslint-disable-next-line
     } catch (error: any) {
-        console.error('Error in sendCashBack:', error);
+        console.error('Error in sendSatsback:', error);
         throw error;
     }
 }
 
-export { sendCashBack };
+export { sendSatsback };
