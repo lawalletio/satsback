@@ -31,6 +31,7 @@ async function makeEvent(
 
         // Calculate satsback amount
         let satsbackAmount: number;
+        let satsbackMemo: string = 'Satsback por pagar con LaCard.';
 
         const volunteer: Volunteer | null = await prisma.volunteer.findUnique({
             where: {
@@ -50,6 +51,15 @@ async function makeEvent(
             const roundAmount = Math.floor(safeMinimumAmount / 1000) * 1000; // prevent milisats
 
             satsbackAmount = Math.min(roundAmount, volunteer.voucher); // prevent more than voucher
+
+            // Memo
+            if (
+                satsbackAmount === volunteer.voucher || // means that the last satsback will make the voucher is empty
+                satsbackAmount !== roundAmount // means that the last satsback is exactly the same as voucher, make the voucher is empty
+            ) {
+                satsbackMemo = `Terminaste tu voucher. Gracias por ser voluntario!`;
+            }
+            satsbackMemo = 'Satsback por pagar con LaCard y ser voluntario.';
 
             // Update voucher
             await prisma.volunteer.update({
@@ -78,7 +88,7 @@ async function makeEvent(
             tokens: {
                 BTC: satsbackAmount,
             },
-            memo: 'satsback test',
+            memo: satsbackMemo,
         };
 
         const unsignedEvent: EventTemplate = {
