@@ -14,7 +14,8 @@ const whitelistPublicKeys = {
 };
 
 const whitelistVolunteers = {
-    pulpo: '9c38f29d508ffdcbe6571a7cf56c963a5805b5d5f41180b19273f840281b3d45',
+    pulpochorizo:
+        '308e83914a7d1b52b5497906f821b83ee0d4a417a50572d36a6c30169a3e968a',
 };
 
 async function makeEvent(
@@ -26,7 +27,10 @@ async function makeEvent(
 ): Promise<NostrEvent> {
     try {
         // Check if user is allowed to make satsback // debug
-        if (!Object.values(whitelistPublicKeys).includes(userPubkey)) {
+        if (
+            !Object.values(whitelistPublicKeys).includes(userPubkey) &&
+            !Object.values(whitelistVolunteers).includes(userPubkey)
+        ) {
             throw new Error('User not allowed to make satsback');
         }
 
