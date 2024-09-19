@@ -12,9 +12,9 @@ datasource db {
 }
 
 model Volunteer {
-  id        String @id @default(uuid())
-  name      String
-  publicKey String @unique
-  voucher   Int
+  id              String @id @default(uuid())
+  name            String
+  publicKey       String @unique
+  voucherMilisats Int
 }
 
