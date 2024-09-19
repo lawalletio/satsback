@@ -21,6 +21,7 @@ async function sendSatsback(
 
         // Make event
         const eventToSent: NostrEvent = await makeEvent(
+            event.id,
             amount,
             userPublicKey!,
             ledgerPublicKey,

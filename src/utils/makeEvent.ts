@@ -97,6 +97,8 @@ async function makeEvent(
                 ['p', ledgerPubkey],
                 ['p', userPubkey],
                 ['t', 'internal-transaction-start'],
+                ['t', 'satsback'],
+                ['e', eTag],
             ],
             content: JSON.stringify(content),
             created_at: Math.round(Date.now() / 1000) + 1,
