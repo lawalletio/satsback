@@ -3,11 +3,24 @@ import { SubscriptionParams } from '../types/relay';
 
 async function generateRelay(
     relayUrl: string,
-    subscriptionCondition?: SubscriptionParams
+    subscriptionCondition?: SubscriptionParams,
+    timestamp?: number
 ) {
     const relay = await Relay.connect(relayUrl);
 
-    console.log('Connected to relay:', relay.url);
+    const stringTimeToConnection = timestamp
+        ? `\n| in: ${Date.now() - timestamp}ms`
+        : '';
+    console.log(
+        '|--',
+        '\n| Connected to relay:',
+        '\n| url:',
+        relay.url,
+        '\n| at:',
+        Date.now(),
+        stringTimeToConnection,
+        '\n|--'
+    );
 
     if (subscriptionCondition) {
         relay.subscribe(subscriptionCondition.filters, {
@@ -19,8 +32,8 @@ async function generateRelay(
     }
 
     relay.onclose = async () => {
-        console.log('Relay closed');
-        return await generateRelay(relayUrl, subscriptionCondition);
+        console.warn('Relay closed at:', Date.now());
+        return await generateRelay(relayUrl, subscriptionCondition, Date.now());
     };
 
     return relay;

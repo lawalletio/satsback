@@ -50,9 +50,7 @@ const start = async () => {
             },
         };
 
-        const relay = await generateRelay(relayUrl, subscriptionParams);
-
-        console.log('Relay successfully connected:', relay);
+        await generateRelay(relayUrl, subscriptionParams, Date.now());
         // eslint-disable-next-line
     } catch (error: any) {
         console.error('Critical Error in start():', error);
