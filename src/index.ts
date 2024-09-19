@@ -21,8 +21,23 @@ const start = async () => {
         const relayUrl = 'wss://relay.lawallet.ar';
 
         // Filters
-        const since: number =
+        let since: number =
             parseInt(process.env.TIMESTAMP_SECONDS_INIT!) | (Date.now() / 1000);
+
+        const lastEvent = await prisma.eventDoneSatsback.findFirst({
+            orderBy: {
+                timestamp: 'desc',
+            },
+        });
+
+        if (lastEvent) {
+            since = lastEvent.timestamp.getTime() / 1000 - 10;
+
+            console.log(
+                'Conecting to relay with since of last event saved in db'
+            );
+            console.log('Event ID:', lastEvent.eventId);
+        }
 
         const filters: Filter[] = [
             {
@@ -49,7 +64,8 @@ const start = async () => {
                     );
 
                     if (eventDone) {
-                        throw new Error('Event already done');
+                        console.warn('Event already done');
+                        return;
                     }
 
                     await sendSatsback(event, ledgerPublicKey, privateKey);
