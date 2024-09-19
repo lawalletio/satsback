@@ -40,11 +40,13 @@ const start = async () => {
             callback: async (event) => {
                 try {
                     // Check if event is already done
-                    const eventDone = await prisma.eventDoneSatsback.findFirst({
-                        where: {
-                            eventId: event.id,
-                        },
-                    });
+                    const eventDone = await prisma.eventDoneSatsback.findUnique(
+                        {
+                            where: {
+                                eventId: event.id,
+                            },
+                        }
+                    );
 
                     if (eventDone) {
                         throw new Error('Event already done');
