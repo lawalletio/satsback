@@ -20,13 +20,16 @@ const start = async () => {
         const relayUrl = 'wss://relay.lawallet.ar';
 
         // Filters
+        const since: number =
+            parseInt(process.env.TIMESTAMP_SECONDS_INIT!) | (Date.now() / 1000);
+
         const filters: Filter[] = [
             {
                 kinds: [1112],
                 authors: [ledgerPublicKey],
                 '#p': [laposPublicKey],
                 '#t': ['internal-transaction-ok'],
-                limit: 0,
+                since,
             },
         ];
 
