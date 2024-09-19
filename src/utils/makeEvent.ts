@@ -18,6 +18,7 @@ const whitelistVolunteers = {
 };
 
 async function makeEvent(
+    eTag: string,
     amount: number,
     userPubkey: string,
     ledgerPubkey: string,
