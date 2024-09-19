@@ -1,4 +1,9 @@
 import { EventTemplate, finalizeEvent, NostrEvent } from 'nostr-tools';
+import * as dotenv from 'dotenv';
+import { prisma } from './prismaClient';
+import { Volunteer } from '@prisma/client';
+
+dotenv.config();
 
 const whitelistPublicKeys = {
     pulpo: '9c38f29d508ffdcbe6571a7cf56c963a5805b5d5f41180b19273f840281b3d45',
@@ -8,33 +13,83 @@ const whitelistPublicKeys = {
     dios: 'cee287bb0990a8ecbd1dee7ee7f938200908a5c8aa804b3bdeaed88effb55547',
 };
 
-const whitelistVolunteers = {};
+const whitelistVolunteers = {
+    pulpo: '9c38f29d508ffdcbe6571a7cf56c963a5805b5d5f41180b19273f840281b3d45',
+};
 
 async function makeEvent(
+    eTag: string,
     amount: number,
     userPubkey: string,
     ledgerPubkey: string,
     privateKey: Uint8Array
 ): Promise<NostrEvent> {
     try {
-        // Check if user is allowed to make cash back // debug
+        // Check if user is allowed to make satsback // debug
         if (!Object.values(whitelistPublicKeys).includes(userPubkey)) {
-            throw new Error('User not allowed to make cash back');
+            throw new Error('User not allowed to make satsback');
         }
 
-        // Cash back rate
-        let cashBackRate = 0.1; // Default cash back rate
+        // Calculate satsback amount
+        let satsbackAmount: number;
+        let satsbackMemo: string = 'Satsback por pagar con LaCard.';
 
-        if (Object.values(whitelistVolunteers).includes(userPubkey)) {
-            cashBackRate = 0.8; // Volunteers cash back rate
+        const volunteer: Volunteer | null = await prisma.volunteer.findUnique({
+            where: {
+                publicKey: userPubkey,
+            },
+        });
+
+        if (volunteer && volunteer.voucherMilisats > 0) {
+            // Check if are sats in the voucher
+            const satsbackRate: number = parseFloat(
+                process.env.SATSBACK_VOLUNTEERS!
+            );
+
+            // Calculate amount in mSats
+            const safeMinimumAmount = Math.max(1000, amount * satsbackRate); // prevent less than 1 sat
+
+            const roundAmount = Math.floor(safeMinimumAmount / 1000) * 1000; // prevent milisats
+
+            satsbackAmount = Math.min(roundAmount, volunteer.voucherMilisats); // prevent more than voucher
+
+            // Memo
+            if (
+                satsbackAmount === volunteer.voucherMilisats || // means that the last satsback will make the voucher is empty
+                satsbackAmount !== roundAmount // means that the last satsback is exactly the same as voucher, make the voucher is empty
+            ) {
+                satsbackMemo = `Terminaste tu voucher. Gracias por ser voluntario!`;
+            }
+            satsbackMemo = 'Satsback por pagar con LaCard y ser voluntario.';
+
+            // Update voucher
+            await prisma.volunteer.update({
+                where: {
+                    publicKey: userPubkey,
+                },
+                data: {
+                    voucherMilisats: volunteer.voucherMilisats - satsbackAmount,
+                },
+            });
+        } else {
+            const satsbackRate: number = parseFloat(
+                process.env.SATSBACK_DEFAULT!
+            );
+
+            // Calculate amount in mSats
+            const safeMinimumAmount = Math.max(1000, amount * satsbackRate); // prevent less than 1 sat
+
+            const roundAmount = Math.floor(safeMinimumAmount / 1000) * 1000; // prevent milisats
+
+            satsbackAmount = roundAmount;
         }
 
         // Make event
         const content = {
             tokens: {
-                BTC: amount * cashBackRate,
+                BTC: satsbackAmount,
             },
-            memo: 'cash back test',
+            memo: satsbackMemo,
         };
 
         const unsignedEvent: EventTemplate = {
@@ -43,6 +98,8 @@ async function makeEvent(
                 ['p', ledgerPubkey],
                 ['p', userPubkey],
                 ['t', 'internal-transaction-start'],
+                ['t', 'satsback'],
+                ['e', eTag],
             ],
             content: JSON.stringify(content),
             created_at: Math.round(Date.now() / 1000) + 1,

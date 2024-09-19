@@ -1,7 +1,8 @@
 import { NostrEvent } from 'nostr-tools';
-import { makeEvent } from './makeEvent';
+import { makeEvent } from '../utils/makeEvent';
+import { prisma } from '../utils/prismaClient';
 
-async function sendCashBack(
+async function sendSatsback(
     event: NostrEvent,
     ledgerPublicKey: string,
     privateKey: Uint8Array
@@ -20,6 +21,7 @@ async function sendCashBack(
 
         // Make event
         const eventToSent: NostrEvent = await makeEvent(
+            event.id,
             amount,
             userPublicKey!,
             ledgerPublicKey,
@@ -41,16 +43,24 @@ async function sendCashBack(
 
         // Error
         if (!response.ok) {
-            throw new Error(`Failed to send cash back: ${response.statusText}`);
+            throw new Error(`Failed to send satsback: ${response.statusText}`);
         }
 
-        console.log('Cash back sent');
+        console.log('Satsback sent');
+
+        await prisma.eventDoneSatsback.create({
+            data: {
+                eventId: event.id,
+                timestamp: new Date(event.created_at * 1000),
+                eventSatsbackId: eventToSent.id,
+            },
+        });
 
         // eslint-disable-next-line
     } catch (error: any) {
-        console.error('Error in sendCashBack:', error);
+        console.error('Error in sendSatsback:', error);
         throw error;
     }
 }
 
-export { sendCashBack };
+export { sendSatsback };
