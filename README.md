@@ -87,3 +87,4 @@ pnpm dev
     -   [ ] Of the database
     -   [ ] How avoid double satsback
     -   [ ] How handle relay disconnection
+-   [ ] Dockerize
