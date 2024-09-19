@@ -50,6 +50,16 @@ async function makeEvent(
             const roundAmount = Math.floor(safeMinimumAmount / 1000) * 1000; // prevent milisats
 
             satsbackAmount = Math.min(roundAmount, volunteer.voucher); // prevent more than voucher
+
+            // Update voucher
+            await prisma.volunteer.update({
+                where: {
+                    publicKey: userPubkey,
+                },
+                data: {
+                    voucher: volunteer.voucher - satsbackAmount,
+                },
+            });
         } else {
             const satsbackRate: number = parseFloat(
                 process.env.SATSBACK_DEFAULT!
