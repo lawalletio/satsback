@@ -52,6 +52,7 @@ async function sendSatsback(
             data: {
                 eventId: event.id,
                 timestamp: new Date(event.created_at * 1000),
+                eventSatsbackId: eventToSent.id,
             },
         });
 

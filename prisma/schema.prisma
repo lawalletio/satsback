@@ -19,7 +19,8 @@ model Volunteer {
 }
 
 model EventDoneSatsback {
-  id        String   @id @default(uuid())
-  eventId   String   @unique
-  timestamp DateTime
+  id              String   @id @default(uuid())
+  eventId         String   @unique
+  timestamp       DateTime
+  eventSatsbackId String   @unique
 }
