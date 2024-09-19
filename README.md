@@ -79,7 +79,11 @@ pnpm dev
 -   [ ] Subscribe to relay with the last timestamp
 -   [x] Check if events are already recive satsback
 -   [ ] Cache for prisma
-    -   [ ] Volunteers public keys
-    -   [ ] Amount of vouchers
-    -   [ ] Last timestamp of last payment
-    -   [ ] Last id of payment
+    -   [ ] Volunteers model
+    -   [ ] Events model
+-   [ ] Add documentation
+    -   [ ] Of the filters
+    -   [ ] Of event that the module can handle and emit
+    -   [ ] Of the database
+    -   [ ] How avoid double satsback
+    -   [ ] How handle relay disconnection
