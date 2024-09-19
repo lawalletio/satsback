@@ -4,6 +4,7 @@ import { Filter } from 'nostr-tools';
 import { sendSatsback } from './services/sendSatsback';
 import { generateRelay } from './services/relay';
 import { SubscriptionParams } from './types/relay';
+import { prisma } from './utils/prismaClient';
 
 dotenv.config();
 
@@ -38,14 +39,25 @@ const start = async () => {
             filters,
             callback: async (event) => {
                 try {
+                    // Check if event is already done
+                    const eventDone = await prisma.eventDoneSatsback.findFirst({
+                        where: {
+                            eventId: event.id,
+                        },
+                    });
+
+                    if (eventDone) {
+                        throw new Error('Event already done');
+                    }
+
                     await sendSatsback(event, ledgerPublicKey, privateKey);
 
                     // eslint-disable-next-line
                 } catch (error: any) {
                     if (error.message === 'User not allowed to make satsback') {
-                        console.warn(
-                            'Unauthorized user tried to make satsback'
-                        );
+                        console.warn(error.message);
+                    } else if (error.message === 'Event already done') {
+                        console.warn(error.message);
                     } else {
                         console.error('Error in relay callback:', error);
                     }

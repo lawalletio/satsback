@@ -74,9 +74,10 @@ pnpm dev
         -   [x] Search in db
         -   [x] Handle sats remaining
     -   [ ] Encrypt metadata of conent of event for the ledger send interal transaction
-    -   [ ] Save id of payments to LaPOS in db
-    -   [ ] Save the last timestamp of the last payment in db
+    -   [x] Save id of payments to LaPOS in db
+    -   [x] Save the last timestamp of the last payment in db
 -   [ ] Subscribe to relay with the last timestamp
+-   [x] Check if events are already recive satsback
 -   [ ] Cache for prisma
     -   [ ] Volunteers public keys
     -   [ ] Amount of vouchers

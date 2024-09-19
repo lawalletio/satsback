@@ -1,5 +1,6 @@
 import { NostrEvent } from 'nostr-tools';
 import { makeEvent } from '../utils/makeEvent';
+import { prisma } from '../utils/prismaClient';
 
 async function sendSatsback(
     event: NostrEvent,
@@ -45,6 +46,13 @@ async function sendSatsback(
         }
 
         console.log('Satsback sent');
+
+        await prisma.eventDoneSatsback.create({
+            data: {
+                eventId: event.id,
+                timestamp: new Date(event.created_at * 1000),
+            },
+        });
 
         // eslint-disable-next-line
     } catch (error: any) {

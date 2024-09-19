@@ -18,3 +18,8 @@ model Volunteer {
   voucherMilisats Int
 }
 
+model EventDoneSatsback {
+  id        String   @id @default(uuid())
+  eventId   String   @unique
+  timestamp DateTime
+}
