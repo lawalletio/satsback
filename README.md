@@ -66,15 +66,19 @@ pnpm dev
 ## To Do
 
 -   [x] Fix minimum amount of satsback
--   [ ] Add database
-    -   [ ] Add list of volunteers walias
+-   [x] Add database
+    -   [x] Add list of volunteers walias (pubkey and sats of voucher)
 -   [x] Add satsback percentages (normal and volunteers) to environment variables
--   [ ] Setup volunteers in db (pubkey and sats of voucher)
 -   [ ] makeEvent
-    -   [ ] Volunteers handle
-        -   [ ] Search in db
-        -   [ ] Handle sats remaining
+    -   [x] Volunteers handle
+        -   [x] Search in db
+        -   [x] Handle sats remaining
     -   [ ] Encrypt metadata of conent of event for the ledger send interal transaction
     -   [ ] Save id of payments to LaPOS in db
     -   [ ] Save the last timestamp of the last payment in db
 -   [ ] Subscribe to relay with the last timestamp
+-   [ ] Cache for prisma
+    -   [ ] Volunteers public keys
+    -   [ ] Amount of vouchers
+    -   [ ] Last timestamp of last payment
+    -   [ ] Last id of payment

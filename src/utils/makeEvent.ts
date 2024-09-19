@@ -1,5 +1,7 @@
 import { EventTemplate, finalizeEvent, NostrEvent } from 'nostr-tools';
 import * as dotenv from 'dotenv';
+import { prisma } from './prismaClient';
+import { Volunteer } from '@prisma/client';
 
 dotenv.config();
 
@@ -27,18 +29,39 @@ async function makeEvent(
             throw new Error('User not allowed to make satsback');
         }
 
-        // Satsback rate
-        let satsbackRate: string = process.env.SATSBACK_DEFAULT!; // Default satsback rate
+        // Calculate satsback amount
+        let satsbackAmount: number;
 
-        if (Object.values(whitelistVolunteers).includes(userPubkey)) {
-            satsbackRate = process.env.SATSBACK_VOLUNTEERS!; // Volunteers satsback rate
+        const volunteer: Volunteer | null = await prisma.volunteer.findUnique({
+            where: {
+                publicKey: userPubkey,
+            },
+        });
+
+        if (volunteer && volunteer.voucher > 0) {
+            // Check if are sats in the voucher
+            const satsbackRate: number = parseFloat(
+                process.env.SATSBACK_VOLUNTEERS!
+            );
+
+            // Calculate amount in mSats
+            const safeMinimumAmount = Math.max(1000, amount * satsbackRate); // prevent less than 1 sat
+
+            const roundAmount = Math.floor(safeMinimumAmount / 1000) * 1000; // prevent milisats
+
+            satsbackAmount = Math.min(roundAmount, volunteer.voucher); // prevent more than voucher
+        } else {
+            const satsbackRate: number = parseFloat(
+                process.env.SATSBACK_DEFAULT!
+            );
+
+            // Calculate amount in mSats
+            const safeMinimumAmount = Math.max(1000, amount * satsbackRate); // prevent less than 1 sat
+
+            const roundAmount = Math.floor(safeMinimumAmount / 1000) * 1000; // prevent milisats
+
+            satsbackAmount = roundAmount;
         }
-
-        // Satsback amount in mSats
-        const satsbackAmount: number =
-            Math.floor(
-                Math.max(1000, amount * parseFloat(satsbackRate)) / 1000
-            ) * 1000;
 
         // Make event
         const content = {
