@@ -7,11 +7,15 @@ async function generateRelay(
     subscriptionCondition?: SubscriptionParams,
     timestamp?: number
 ) {
+    if (!subscriptionCondition)
+        console.warn('No subscription condition provided');
+
     const relay = await Relay.connect(relayUrl);
 
     const stringTimeToConnection = timestamp
         ? `\n| in: ${Date.now() - timestamp}ms`
         : '';
+
     console.log(
         '|--',
         '\n| Connected to relay:',
@@ -26,7 +30,7 @@ async function generateRelay(
     if (subscriptionCondition) {
         relay.subscribe(subscriptionCondition.filters, {
             onevent(event) {
-                console.log('Event recived:', event);
+                console.log('Event recived:', event); // debug
                 subscriptionCondition.callback(event);
             },
         });
