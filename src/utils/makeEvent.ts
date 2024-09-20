@@ -64,6 +64,9 @@ async function makeEvent(
 
             satsbackAmount = Math.min(roundAmount, volunteer.voucherMilisats); // prevent more than voucher
 
+            const newVoucherMilisats =
+                volunteer.voucherMilisats - satsbackAmount;
+
             // Memo
             if (
                 satsbackAmount === volunteer.voucherMilisats || // means that the last satsback will make the voucher is empty
@@ -79,7 +82,7 @@ async function makeEvent(
                     publicKey: userPubkey,
                 },
                 data: {
-                    voucherMilisats: volunteer.voucherMilisats - satsbackAmount,
+                    voucherMilisats: newVoucherMilisats,
                 },
             });
         } else {
