@@ -69,12 +69,14 @@ async function makeEvent(
 
             // Memo
             if (
-                satsbackAmount === volunteer.voucherMilisats || // means that the last satsback will make the voucher is empty
-                satsbackAmount !== roundAmount // means that the last satsback is exactly the same as voucher, make the voucher is empty
+                satsbackAmount === volunteer.voucherMilisats // means that the satsbackAmount is the same as the voucher, make it empty
             ) {
-                satsbackMemo = `Terminaste tu voucher. Gracias por ser voluntario!`;
+                satsbackMemo = `Terminaste tu voucher. Gracias por ser voluntario! <3`;
+            } else {
+                satsbackMemo =
+                    'Satsback por pagar con LaCard y ser voluntario.' +
+                    ` (${satsbackRate * 100}% OFF). Te quedan ${newVoucherMilisats / 1000} sats en tu voucher.`;
             }
-            satsbackMemo = 'Satsback por pagar con LaCard y ser voluntario.';
 
             // Update voucher
             await prisma.volunteer.update({
@@ -89,6 +91,8 @@ async function makeEvent(
             const satsbackRate: number = parseFloat(
                 process.env.SATSBACK_DEFAULT!
             );
+
+            satsbackMemo += ` (${satsbackRate * 100}% OFF)`;
 
             // Calculate amount in mSats
             const safeMinimumAmount = Math.max(1000, amount * satsbackRate); // prevent less than 1 sat
