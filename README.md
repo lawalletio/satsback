@@ -69,11 +69,11 @@ pnpm dev
 -   [x] Add database
     -   [x] Add list of volunteers walias (pubkey and sats of voucher)
 -   [x] Add satsback percentages (normal and volunteers) to environment variables
--   [ ] makeEvent
+-   [x] makeEvent
     -   [x] Volunteers handle
         -   [x] Search in db
         -   [x] Handle sats remaining
-    -   [ ] Encrypt metadata of conent of event for the ledger send interal transaction
+    -   [x] Encrypt metadata of conent of event for the ledger send interal transaction
     -   [x] Save id of payments to LaPOS in db
     -   [x] Save the last timestamp of the last payment in db
 -   [x] Subscribe to relay with the last timestamp
@@ -81,6 +81,7 @@ pnpm dev
 -   [ ] Cache for prisma
     -   [ ] Volunteers model
     -   [ ] Events model
+-   [ ] Endpoint to add volunteer
 -   [ ] Add documentation
     -   [ ] Of the filters
     -   [ ] Of event that the module can handle and emit
